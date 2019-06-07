@@ -3,7 +3,7 @@ let n
 初始化()
 
 
-setInterval(function(){
+let timer = setInterval(function(){
   makeLeave(getImage(n))
   .one('transitionend',(e)=>{
     makeEnter($(e.currentTarget))
@@ -11,6 +11,26 @@ setInterval(function(){
   makeCurrent(getImage(n+1))
   n += 1
 },2000)
+
+
+document.addEventListener('visibilitychange',function(e){
+  console.log(document.hidden)
+  if(document.hidden){
+    window.clearInterval(timer)
+  }else{
+    timer = setInterval(function(){
+      makeLeave(getImage(n))
+      .one('transitionend',(e)=>{
+        makeEnter($(e.currentTarget))
+      })
+      makeCurrent(getImage(n+1))
+      n += 1
+    },2000)
+  }
+})
+
+
+
 
 function x(n){
   if(n > 3){
