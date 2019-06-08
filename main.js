@@ -14,13 +14,17 @@ $('#previous').on('click',function(){
 })
 
 let timer = setInterval(function(){
-  goToSlide(current + 1)
+  bindEvents(current + 1)
+  
+  
 },2000)
+
 $('#container').on('mouseenter',function(){
   window.clearInterval(timer)
 }).on('mouseleave',function(){
   timer =setInterval(function(){
     goToSlide(current + 1)
+    
   },2000)
 })
 
@@ -40,8 +44,12 @@ function bindEvents(){
    $('#buttonWrapper').on('click','button',function(e){
     let $button = $(e.currentTarget) 
     let index = $button.index()
-    goToSlide (index)
+    $button.addClass('special').siblings().removeClass('special')
+    
+    goToSlide(index)
   })
+  
+  
 
 // $buttons.eq(0).on('click',function(){
 //   if(current == 2){
@@ -93,8 +101,10 @@ function bindEvents(){
 function goToSlide (index){
   if(index > $buttons.length - 1){
     index = 0
+    
   }else if(index < 0){
     index = $buttons.length - 1
+    
   }
 
   if(current === $buttons.length - 1 && index === 0){
@@ -106,6 +116,8 @@ function goToSlide (index){
       $slides.css({transform:`translateX(${-(index + 1) * 400}px)`})
       .show()
       })
+      
+
   }else if(current === 0 && index === $buttons.length - 1){
     $slides.css({
       transform:'translateX(0px)'})
@@ -115,8 +127,11 @@ function goToSlide (index){
       $slides.css({transform:`translateX(${-(index + 1) * 400}px)`})
       .show()
       })
+      
+      
   }else{
     $slides.css({transform:`translateX(${-(index + 1) * 400}px)`})
+    
   }
   current = index
 }
