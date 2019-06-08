@@ -21,3 +21,25 @@
     transition: all 0.3s;
     
 }
+#buttonWrapper > button {
+    width: 50px;
+    height: 40px;
+    border-radius: 10px;
+    margin: 0 20px;
+}
+#buttonWrapper > button > svg {
+    width: 40px;
+    height: 30px;;
+}
+#controls #previous > svg {
+  width: 30px;
+  height: 20px;
+}
+#controls #next > svg {
+    width: 30px;
+    height: 20px;
+  }
+  #controls > button {
+      border-radius: 10px;
+      margin: 5px 20px 20px;
+  }
