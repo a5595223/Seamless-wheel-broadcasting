@@ -1,61 +1,122 @@
+let $buttons = $('#buttonWrapper > button')
+let $slides = $('#slides')
+let current = 0
+let $images = $('.images').children()
 
-let n 
-初始化()
-
+makeFakeSlides($images)
+$slides.css({transform:'translateX(-400px)'})
+bindEvents()
+$('#next').on('click',function(){
+  goToSlide(current + 1)
+})
+$('#previous').on('click',function(){
+  goToSlide(current - 1)
+})
 
 let timer = setInterval(function(){
-  makeLeave(getImage(n))
-  .one('transitionend',(e)=>{
-    makeEnter($(e.currentTarget))
-  })
-  makeCurrent(getImage(n+1))
-  n += 1
+  goToSlide(current + 1)
 },2000)
-
-
-document.addEventListener('visibilitychange',function(e){
-  console.log(document.hidden)
-  if(document.hidden){
-    window.clearInterval(timer)
-  }else{
-    timer = setInterval(function(){
-      makeLeave(getImage(n))
-      .one('transitionend',(e)=>{
-        makeEnter($(e.currentTarget))
-      })
-      makeCurrent(getImage(n+1))
-      n += 1
-    },2000)
-  }
+$('.window').on('mouseenter',function(){
+  window.clearInterval(timer)
+}).on('mouseleave',function(){
+  timer =setInterval(function(){
+    goToSlide(current + 1)
+  },2000)
 })
 
 
+function makeFakeSlides(){
+  let $firstimage = $images.eq(0).clone(true)
+  let $lastimage = $images.eq($images.length-1).clone(true)
+
+  $slides.append($firstimage)
+  $slides.prepend($lastimage)
+}
 
 
-function x(n){
-  if(n > 3){
-    n = n%3
-    if(n === 0){
-      n =3
-    }
+
+function bindEvents(){
+
+   $('#buttonWrapper').on('click','button',function(e){
+    let $button = $(e.currentTarget) 
+    let index = $button.index()
+    goToSlide (index)
+  })
+
+// $buttons.eq(0).on('click',function(){
+//   if(current == 2){
+    
+//     $slides.css({
+//       transform:'translateX(-1600px)'})
+//       .one('transitionend',function(){
+//       $slides.hide()
+//       .offset()
+//       $slides.css({transform:'translateX(-400px)'})
+//       .show()
+//       })
+//   }else{
+    
+//     $slides.css({
+//      transform:'translateX(-400px)'
+//     })
+//   }
+  
+//   current = 0
+// })
+// $buttons.eq(1).on('click',function(){
+  
+//   $slides.css({
+//    transform:'translateX(-800px)'
+//   })
+//   current = 1
+// })
+// $buttons.eq(2).on('click',function(){
+//   if(current == 0){
+//     $slides.css({
+//       transform:'translateX(0px)'})
+//       .one('transitionend',function(){
+//       $slides.hide()
+//       .offset()
+//       $slides.css({transform:'translateX(-1200px)'})
+//       .show()
+//       })
+//   }else{
+//     $slides.css({
+//       transform:'translateX(-1200px)'
+//      })
+//   }
+  
+//   current = 2
+// })
+}
+
+function goToSlide (index){
+  if(index > $buttons.length - 1){
+    index = 0
+  }else if(index < 0){
+    index = $buttons.length - 1
   }
-  return n
-}
-function getImage(n){
-  return $(`.images > img:nth-child(${x(n)}`)
-}
 
-function 初始化(){
-  n = 1
-  $(`.images > img:nth-Child(${n})`).addClass('current')
-  .siblings().addClass('enter')
-}
-function makeCurrent($node){
-  return $node.removeClass('leave enter').addClass('current')
-}
-function makeLeave($node){
-  return $node.removeClass('current enter').addClass('leave')
-}
-function makeEnter($node){
-  return $node.removeClass('current leave').addClass('enter')
+  if(current === $buttons.length - 1 && index === 0){
+    $slides.css({
+      transform:`translateX(${-($buttons.length + 1) * 400}px)`})
+      .one('transitionend',function(){
+      $slides.hide()
+      .offset()
+      $slides.css({transform:`translateX(${-(index + 1) * 400}px)`})
+      .show()
+      })
+  }else if(current === 0 && index === $buttons.length - 1){
+    $slides.css({
+      transform:'translateX(0px)'})
+      .one('transitionend',function(){
+      $slides.hide()
+      .offset()
+      $slides.css({transform:`translateX(${-(index + 1) * 400}px)`})
+      .show()
+      })
+  }else{
+    $slides.css({transform:`translateX(${-(index + 1) * 400}px)`})
+  }
+  current = index
 }
